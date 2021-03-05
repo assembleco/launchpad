@@ -13,16 +13,28 @@ import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 
 class Hello extends React.Component {
-  state = { response: null }
+  state = {
+    response: null,
+    domain: 'raspberrypi.local',
+    package_channel: 3000,
+    hierarch_channel: 4321,
+  }
 
   render = () => (
     <div>
     <p>Hello {this.props.name}!</p>
+    Domain: <input type="text" value={this.state.domain} onChange={e => this.setState({ domain: e.value })} /><br/>
+    Package channel: <input type="text" value={this.state.package_channel} onChange={e => this.setState({ package_channel: e.value })} /><br/>
+    Hierarch channel: <input type="text" value={this.state.hierarch_channel} onChange={e => this.setState({ hierarch_channel: e.value })} /><br/>
     <p>
     <button onClick={() =>
       fetch("/launch", {
         method: "POST",
-        body: JSON.stringify({}),
+        body: JSON.stringify({
+          domain: this.state.domain,
+          package_channel: this.state.package_channel,
+          hierarch_channel: this.state.hierarch_channel,
+        }),
         headers: {
           'X-CSRF-Token': window._auth_code,
         },
