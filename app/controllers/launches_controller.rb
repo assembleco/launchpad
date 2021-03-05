@@ -6,9 +6,7 @@ class LaunchesController < ApplicationController
       'ExposedPorts' => channels.values.map{|x| ["#{x}/tcp", {}]}.to_h,
       'HostConfig' => {
         'PortBindings' =>
-          channels.values.map{|x|
-            ["#{x}/tcp", [{ 'HostPort' => x }]]
-          }.to_h
+          channels.values.map{|x| ["#{x}/tcp", [{ 'HostPort' => x }]] }.to_h
       }
     )
     container.exec(['./my_service'], detach: true)
