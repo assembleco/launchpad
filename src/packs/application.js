@@ -8,6 +8,21 @@ import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 
+import React from 'react'
+import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
+
+const Hello = props => (
+  <div>Hello {props.name}!</div>
+)
+
+document.addEventListener('DOMContentLoaded', () => {
+  ReactDOM.render(
+    <Hello name="Hierarch" />,
+    document.body.appendChild(document.createElement('div')),
+  )
+})
+
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
