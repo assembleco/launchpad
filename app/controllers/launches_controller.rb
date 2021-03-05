@@ -5,9 +5,10 @@ class LaunchesController < ApplicationController
       'Image' => 'assemble/hierarch',
       'ExposedPorts' => channels.values.map{|x| ["#{x}/tcp", {}]}.to_h,
       'HostConfig' => {
-        'PortBindings' => {
-          '1234/tcp' => [{ 'HostPort' => '1234' }]
-        }
+        'PortBindings' =>
+          channels.values.map{|x|
+            ["#{x}/tcp", [{ 'HostPort' => x }]]
+          }.to_h
       }
     )
     container.exec(['./my_service'], detach: true)
