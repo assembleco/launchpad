@@ -37,6 +37,8 @@ class Hello extends React.Component {
         }),
         headers: {
           'X-CSRF-Token': window._auth_code,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
         },
       })
       .then(response => response.json())
