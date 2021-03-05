@@ -20,14 +20,20 @@ class Hello extends React.Component {
     <p>Hello {this.props.name}!</p>
     <p>
     <button onClick={() =>
-      fetch("/launch", { method: "POST" })
+      fetch("/launch", {
+        method: "POST",
+        body: JSON.stringify({}),
+        headers: {
+          'X-CSRF-Token': window._auth_code,
+        },
+      })
       .then(response => response.json())
       .then(response => this.setState({ response }))
     }>Launch!</button>
     </p>
-    <p>
-    {this.state.response}
-    </p>
+    <pre>
+    {JSON.stringify(this.state.response, null, 2)}
+    </pre>
     </div>
   )
 }
