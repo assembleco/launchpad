@@ -12,9 +12,25 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 
-const Hello = props => (
-  <div>Hello {props.name}!</div>
-)
+class Hello extends React.Component {
+  state = { response: null }
+
+  render = () => (
+    <div>
+    <p>Hello {this.props.name}!</p>
+    <p>
+    <button onClick={() =>
+      fetch("/launch", { method: "POST" })
+      .then(response => response.json())
+      .then(response => this.setState({ response }))
+    }>Launch!</button>
+    </p>
+    <p>
+    {this.state.response}
+    </p>
+    </div>
+  )
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
