@@ -27,14 +27,18 @@ class Hello extends React.Component {
     Package channel: <input type="text" value={this.state.package_channel} onChange={e => this.setState({ package_channel: e.value })} /><br/>
     Hierarch channel: <input type="text" value={this.state.hierarch_channel} onChange={e => this.setState({ hierarch_channel: e.value })} /><br/>
     <p>
-    <button onClick={() =>
+    <button onClick={() => {
+
+      var body = JSON.stringify({
+        domain: this.state.domain,
+        package_channel: this.state.package_channel,
+        hierarch_channel: this.state.hierarch_channel,
+      })
+      console.log(body)
+
       fetch("/launch", {
         method: "POST",
-        body: JSON.stringify({
-          domain: this.state.domain,
-          package_channel: this.state.package_channel,
-          hierarch_channel: this.state.hierarch_channel,
-        }),
+        body,
         headers: {
           'X-CSRF-Token': window._auth_code,
           'Accept': 'application/json',
@@ -43,6 +47,7 @@ class Hello extends React.Component {
       })
       .then(response => response.json())
       .then(response => this.setState({ response }))
+    }
     }>Launch!</button>
     </p>
     <pre>

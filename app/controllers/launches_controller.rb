@@ -5,7 +5,7 @@ class LaunchesController < ApplicationController
     p = params.permit(:domain, :package_channel, :hierarch_channel)
     channels = p.slice(:hierarch_channel, :package_channel)
 
-    container = Docker::Container.create(
+    environ = {
       'Cmd' => ['yarn', 'go'],
       'Image' => 'assemble/hierarch',
       'Env' => [
@@ -18,7 +18,10 @@ class LaunchesController < ApplicationController
         'PortBindings' =>
         channels.values.map{|x| ["#{x}/tcp", [{ 'HostPort' => x.to_s }]] }.to_h
       }
-    )
+    }
+    p environ
+
+    container = Docker::Container.create(environ)
     container.start
     puts 'running'
 
@@ -26,12 +29,12 @@ class LaunchesController < ApplicationController
     response = []
 
     response << container.logs(stdout: true)
-    puts 'logs:'
-    puts response[-1]
+    # puts 'logs:'
+    # puts response[-1]
 
     response << container.exec(['node', 'hierarch'], detach: true)
-    puts 'logs:'
-    puts response[-1]
+    # puts 'logs:'
+    # puts response[-1]
 
     render json: p.merge({ launched: "yes", response: response })
   end
