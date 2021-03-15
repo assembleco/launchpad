@@ -10,6 +10,7 @@ RSpec.describe Launch do
       ]
       launch = Launch.go("192.168.1.4")
 
+      expect(Launch.running.count).to eq(4)
       expect(launch.package_channel).to eq 1030
       expect(launch.hierarch_channel).to eq 1031
       expect(launch.user_address).to eq "192.168.1.4"
