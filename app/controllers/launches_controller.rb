@@ -4,12 +4,13 @@ class LaunchesController < ApplicationController
   def new
     launch = Launch.go(request.remote_ip)
     channels = [launch.package_channel, launch.hierarch_channel]
+    domain = ENV.fetch("DOMAIN")
 
     environ = {
       'Cmd' => ['yarn', 'go'],
       'Image' => 'assemble/hierarch',
       'Env' => [
-        "DOMAIN=#{"0.0.0.0"}",
+        "DOMAIN=#{domain}",
         "PACKAGE_CHANNEL=#{launch.package_channel}",
         "HIERARCH_CHANNEL=#{launch.hierarch_channel}",
       ],
@@ -29,6 +30,7 @@ class LaunchesController < ApplicationController
     render json: {
       launched: "yes",
       handle: launch.package_handle,
+      channels: channels,
       response: response,
     }
   end
