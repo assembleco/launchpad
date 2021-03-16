@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_14_220354) do
+ActiveRecord::Schema.define(version: 2021_03_16_163245) do
 
   create_table "launches", force: :cascade do |t|
     t.string "user_address"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 2021_03_14_220354) do
     t.datetime "cleaned_up_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "package_handle"
   end
 
 end

@@ -2,40 +2,34 @@ require 'docker'
 
 class LaunchesController < ApplicationController
   def new
-    p = params.permit(:domain, :package_channel, :hierarch_channel)
-    channels = p.slice(:hierarch_channel, :package_channel)
+    launch = Launch.go(request.remote_ip)
+    channels = [launch.package_channel, launch.hierarch_channel]
 
     environ = {
       'Cmd' => ['yarn', 'go'],
       'Image' => 'assemble/hierarch',
       'Env' => [
-        "DOMAIN=#{p[:domain]}",
-        "HIERARCH_CHANNEL=#{p[:hierarch_channel]}",
-        "PACKAGE_CHANNEL=#{p[:package_channel]}",
+        "DOMAIN=#{"0.0.0.0"}",
+        "PACKAGE_CHANNEL=#{launch.package_channel}",
+        "HIERARCH_CHANNEL=#{launch.hierarch_channel}",
       ],
-      'ExposedPorts' => channels.values.map{|x| ["#{x}/tcp", {}]}.to_h,
+      'ExposedPorts' => channels.map{|x| ["#{x}/tcp", {}]}.to_h,
       'HostConfig' => {
         'PortBindings' =>
-        channels.values.map{|x| ["#{x}/tcp", [{ 'HostPort' => x.to_s }]] }.to_h
+        channels.map{|x| ["#{x}/tcp", [{ 'HostPort' => x.to_s }]] }.to_h
       }
     }
-    p environ
 
     container = Docker::Container.create(environ)
     container.start
-    puts 'running'
+    launch.update(package_handle: container.id)
 
-    sleep 10
-    response = []
+    response = container.exec(['node', 'hierarch'], detach: true)
 
-    response << container.logs(stdout: true)
-    # puts 'logs:'
-    # puts response[-1]
-
-    response << container.exec(['node', 'hierarch'], detach: true)
-    # puts 'logs:'
-    # puts response[-1]
-
-    render json: p.merge({ launched: "yes", response: response })
+    render json: {
+      launched: "yes",
+      handle: launch.package_handle,
+      response: response,
+    }
   end
 end
