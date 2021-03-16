@@ -22,10 +22,12 @@ class Launch < ApplicationRecord
   end
 
   def self.choose_address_pair
-    launches = Launch.running.pluck(:package_channel, :hierarch_channel)
+    launches = Launch.
+      running.
+      pluck(:package_channel, :hierarch_channel).
+      flatten
 
-    p launches
-    [1030, 1031]
+    ((1024..65535).to_a - launches).first(2)
   end
 
   def land
