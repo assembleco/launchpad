@@ -12,50 +12,52 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 
+import styled from "styled-components"
+
 class Hello extends React.Component {
   state = {
     response: null,
-    domain: 'raspberrypi.local',
-    package_channel: 3000,
-    hierarch_channel: 4321,
+    domain: '0.0.0.0',
+    package_channel: 3333,
+    hierarch_channel: 3334,
   }
 
   render = () => (
     <div>
-    <p>Hello {this.props.name}!</p>
-    Domain: <input type="text" value={this.state.domain} onChange={e => this.setState({ domain: e.value })} /><br/>
-    Package channel: <input type="text" value={this.state.package_channel} onChange={e => this.setState({ package_channel: e.value })} /><br/>
-    Hierarch channel: <input type="text" value={this.state.hierarch_channel} onChange={e => this.setState({ hierarch_channel: e.value })} /><br/>
-    <p>
-    <button onClick={() => {
+      <button onClick={() => {
+        fetch("/launch", {
+          method: "POST",
+          headers: {
+            'X-CSRF-Token': window._auth_code,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(response => response.json())
+        .then(response => this.setState({ response }))
+      }
+      }>Launch!</button>
 
-      var body = JSON.stringify({
-        domain: this.state.domain,
-        package_channel: this.state.package_channel,
-        hierarch_channel: this.state.hierarch_channel,
-      })
-      console.log(body)
-
-      fetch("/launch", {
-        method: "POST",
-        body,
-        headers: {
-          'X-CSRF-Token': window._auth_code,
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-      })
-      .then(response => response.json())
-      .then(response => this.setState({ response }))
+      { this.state.response &&
+      <Block>
+        Please see
+        <a
+        href={`http://${this.state.domain}:${this.state.response.channels[0]}`}
+        target="_blank"
+        >
+          http://{this.state.domain}:{this.state.response.channels[0]}
+        </a>
+        so you can begin running Hierarch.
+        Your program may be a while loading up.
+      </Block>
     }
-    }>Launch!</button>
-    </p>
-    <pre>
-    {JSON.stringify(this.state.response, null, 2)}
-    </pre>
     </div>
   )
 }
+
+var Block = styled.p`
+border: 4px solid #3d3b11;
+`
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
