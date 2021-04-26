@@ -82,6 +82,10 @@ GEM
     docker-api (2.1.0)
       excon (>= 0.47.0)
       multi_json
+    dotenv (2.7.6)
+    dotenv-rails (2.7.6)
+      dotenv (= 2.7.6)
+      railties (>= 3.2)
     erubi (1.10.0)
     excon (0.79.0)
     ffi (1.14.2)
@@ -230,6 +234,7 @@ DEPENDENCIES
   byebug
   capybara (>= 3.26)
   docker-api
+  dotenv-rails
   jbuilder (~> 2.7)
   listen (~> 3.3)
   pg
@@ -248,7 +253,7 @@ DEPENDENCIES
   webpacker (~> 5.0)
 
 RUBY VERSION
-   ruby 3.0.0p0
+   ruby 3.0.1p64
 
 BUNDLED WITH
-   2.2.3
+   2.2.15
