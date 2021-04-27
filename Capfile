@@ -19,9 +19,6 @@ require "capistrano/rails"
 require "capistrano/passenger"
 require "capistrano/rbenv"
 
-set :rbenv_type, :user
-set :rbenv_ruby, "3.0.1"
-
 # Include tasks from other gems included in your Gemfile
 #
 # For documentation on these, see for example:
