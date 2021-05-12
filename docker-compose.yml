@@ -11,6 +11,8 @@ services:
   web:
     build: .
     env_file: .env
+    environment:
+      - DATABASE_URL=postgres://postgres:passcode@db:5432/launchpad_develop
     image: assemble/launchpad
     command: bundle exec rails s -b 0.0.0.0
     ports:
