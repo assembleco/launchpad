@@ -2,22 +2,24 @@ require 'docker'
 
 class CleanUp
   def self.go(hard = false)
-    running_launches = Launch.where(cleaned_up_at: nil)
+    launched_programs = Launch.where(cleaned_up_at: nil)
     processes = Docker::Container.all
 
-    running_launches.each do |launch|
-      launch_process = processes.select {|x| x.id == launch.package_handle }
+    launched_programs.each do |program|
+      process = processes.find {|x| x.id == program.package_handle }
 
-      launch.update!(cleaned_up_at: Time.current) if !launch_process
-
-      begin
-        launch_process.kill
-        launch_process.delete if hard
-        launch.update!(cleaned_up_at: Time.current)
-      rescue
-        puts "Error cleaning up #{launch.package_handle}"
-      ensure
-        # launch.update!(cleaned_up_at: Time.current)
+      if !process
+        program.update!(cleaned_up_at: Time.current)
+      else
+        begin
+          process.kill
+          process.delete if hard
+          program.update!(cleaned_up_at: Time.current)
+        rescue
+          puts "Error cleaning up #{program.package_handle}"
+        ensure
+          # program.update!(cleaned_up_at: Time.current)
+        end
       end
     end
   end
