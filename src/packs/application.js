@@ -41,14 +41,17 @@ class Hello extends React.Component {
       { this.state.response &&
       <Block>
         Please see
+        &nbsp;
         <a
         href={`http://${this.state.domain}:${this.state.response.channels[0]}`}
         target="_blank"
         >
           http://{this.state.domain}:{this.state.response.channels[0]}
         </a>
+        &nbsp;
         so you can begin running Hierarch.
-        Your program may be a while loading up.
+        <br/>
+        Please hold. Your program is loading.
       </Block>
     }
     </div>
